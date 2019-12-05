@@ -19,12 +19,12 @@ pub fn merge_sort<T: Ord>(items: &[T]) -> Vec<&T> {
             let left_sorted = merge_sort(&items[..middle]);
             let right_sorted = merge_sort(&items[middle..]);
 
-            merge(left_sorted, right_sorted)
+            merge(&left_sorted, &right_sorted)
         }
     }
 }
 
-fn merge<'a, T: Ord>(left: Vec<&'a T>, right: Vec<&'a T>) -> Vec<&'a T> {
+fn merge<'a, T: Ord>(left: &[&'a T], right: &[&'a T]) -> Vec<&'a T> {
     let mut result = Vec::with_capacity(left.len() + right.len());
 
     let mut next_left_index = 0;
@@ -72,8 +72,9 @@ fn merge<'a, T: Ord>(left: Vec<&'a T>, right: Vec<&'a T>) -> Vec<&'a T> {
 
 #[cfg(test)]
 mod tests {
+    // short input
     #[test]
-    fn no_item_gets_sorted_correctly() {
+    fn given_empty_vec_when_sorted_then_empty_vec_is_returned() {
         let sut: Vec<i32> = Vec::new();
         let result = super::merge_sort(&sut);
         let expected: Vec<&i32> = Vec::new();
@@ -81,30 +82,46 @@ mod tests {
     }
 
     #[test]
-    fn single_item_gets_sorted_correctly() {
+    fn given_single_item_when_sorted_then_single_item_is_returned() {
         let sut = vec![ 177 ];
         let result = super::merge_sort(&sut);
         assert_eq!(result, vec![ &177 ]);
     }
 
     #[test]
-    fn two_items_get_sorted_correctly() {
+    fn given_two_different_items_when_sorted_then_order_is_asc() {
         let sut = vec![ 666, 117 ];
         let result = super::merge_sort(&sut);
         assert_eq!(result, vec![ &117, &666 ]);
     }
 
     #[test]
-    fn two_sorted_items_get_sorted_correctly() {
-        let sut = vec![ 177, 666 ];
+    fn given_two_equal_items_when_sorted_then_order_is_asc() {
+        let sut = vec![ 117, 666 ];
         let result = super::merge_sort(&sut);
         assert_eq!(result, vec![ &117, &666 ]);
     }
 
+    // long input
+    
     #[test]
-    fn multiple_items_get_sorted_correctly() {
-        let sut = vec![ 177, 666, 22, 22, 666, 1, 33, 666 ];
+    fn given_large_vec_when_sorted_then_sorted_asc() {
+        let sut = vec![ 9, 14, 6, 2, 15, 13, 5, 11, 4, 3, 12, 1, 10, 8, 0, 7 ];
         let result = super::merge_sort(&sut);
-        assert_eq!(result, vec![ &1, &22, &22, &33, &177, &666, &666, &666 ]);
+        assert_eq!(result, vec![ &0, &1, &2, &3, &4, &5, &6, &7, &8, &9, &10, &11, &12, &13, &14, &15 ]);
+    }
+    
+    #[test]
+    fn given_large_vec_sorted_asc_when_sorted_then_remains_the_same() {
+        let sut = vec![ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ];
+        let result = super::merge_sort(&sut);
+        assert_eq!(result, vec![ &0, &1, &2, &3, &4, &5, &6, &7, &8, &9, &10, &11, &12, &13, &14, &15 ]);
+    }
+    
+    #[test]
+    fn given_large_vec_sorted_desc_when_sorted_then_sorted_asc() {
+        let sut = vec![ 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 ];
+        let result = super::merge_sort(&sut);
+        assert_eq!(result, vec![ &0, &1, &2, &3, &4, &5, &6, &7, &8, &9, &10, &11, &12, &13, &14, &15 ]);
     }
 }
