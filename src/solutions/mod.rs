@@ -4,3 +4,4 @@ mod s3;
 mod s4;
 mod s8;
 mod s9;
+mod s6;
