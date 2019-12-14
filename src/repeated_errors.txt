@@ -1,0 +1,5 @@
+- generic type does not implement trait (Eq, Hash, Clone)
+- immutable value cannot be mutated
+- value of which ownership has been transfered, cannot be used
+    - .into_iter, .iter and .iter_mut
+- equality comparisons of &T == T do not work
